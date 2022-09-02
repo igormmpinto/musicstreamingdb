@@ -1,0 +1,251 @@
+Views that answer the questions posed at the beginning in README file.
+
+
+-- Lista alfabetica de utilizadores ?
+
+CREATE VIEW ListaAlfabeticaUtilizadores AS
+SELECT FirstName+' '+LastName AS Name FROM Users 
+ORDER BY FirstName
+
+
+-- Lista alfabetica de Generos musicais ?
+
+CREATE VIEW ListaAlfabeticaGeneros AS
+SELECT Name FROM Genre 
+ORDER BY Name
+
+
+-- Lista alfabetica de Etiquetas/Labels ?
+
+CREATE VIEW ListaAlfabeticaLabels AS
+SELECT DISTINCT Name FROM Labels 
+ORDER BY Name
+
+-- Lista alfabetica de bandas, por paises ?
+
+CREATE VIEW ListaAlfabeticaBandasPorPaises AS
+SELECT DISTINCT art.name AS ArtistName, loc.Country AS ArtistCountry
+FROM Artists AS art
+INNER JOIN [Location] AS loc ON art.LocationID = loc.LocationID
+ORDER BY art.Name
+
+
+-- Lista alfabética de banda, label, género, nome album ?
+
+CREATE VIEW ListaBandaLabelGeneroAlbum AS
+SELECT DISTINCT art.name AS ArtistName, lab.Name AS LabelName, gnr.Name AS GenreName, alb.Name AS AlbumName
+FROM Artists AS art
+INNER JOIN Albums AS alb ON art.ArtistID = alb.ArtistID
+INNER JOIN [Labels] AS lab ON lab.LabelID = alb.LabelID
+INNER JOIN [Songs] AS sgs ON sgs.AlbumID = alb.AlbumID
+INNER JOIN Genre AS gnr ON gnr.GenreID = sgs.GenreID
+ORDER BY art.Name
+
+
+-- Lista dos 5 países com mais bandas ?
+
+CREATE VIEW Top5PaisesComMaisBandas AS
+SELECT TOP(5) loc.country, COUNT(art.name) AS QtyArtists
+FROM Location AS loc
+INNER JOIN Artists AS art ON art.locationID = loc.locationID
+GROUP BY loc.country
+ORDER BY COUNT(art.name) DESC
+
+
+-- Lista das 10 bandas com mais albuns ?
+
+CREATE VIEW Lista10BandasComMaisAlbuns AS
+SELECT TOP(10) art.name AS ArtistName, COUNT(alb.albumID) AS QtyAlbums
+FROM Artists AS art
+INNER JOIN Albums AS alb ON art.artistID = alb.artistID
+GROUP BY art.name
+ORDER BY COUNT(alb.albumID) DESC
+
+
+-- Lista das 5 etiquetas com mais albuns ?
+
+CREATE VIEW Lista5LabelsComMaisAlbuns AS
+SELECT TOP(5) lab.name AS LabelName, COUNT(alb.albumID) AS QtyAlbums
+FROM Labels AS lab
+INNER JOIN Albums AS alb ON lab.LabelID = alb.LabelID
+GROUP BY lab.name
+ORDER BY COUNT(alb.albumID) DESC
+
+
+-- Lista dos 5 géneros musicais com mais albuns ?
+
+CREATE VIEW Lista5GenerosComMaisAlbuns AS
+SELECT TOP(5) gnr.name AS Genre, COUNT(alb.albumID) AS QtyAlbums
+FROM Genre AS gnr
+INNER JOIN Songs AS sgs ON sgs.GenreID = gnr.GenreID
+INNER JOIN Albums AS alb ON sgs.AlbumID = alb.AlbumID
+GROUP BY gnr.name
+ORDER BY COUNT(alb.albumID) DESC
+
+
+-- Lista dos 20 temas de albuns mais longos ?
+
+CREATE VIEW Lista20TemasAlbunsMaisLongos AS
+SELECT TOP(20) sgs2.Title, alb.Name AS AlbumName, 
+sum( 
+DATEPART(SECOND, sgs.Duration) + 60 * 
+DATEPART(MINUTE, sgs.Duration) + 3600 * 
+DATEPART(HOUR, sgs.Duration )) AS TotalTimeAlbum
+FROM Songs AS sgs
+INNER JOIN Songs AS sgs2 ON sgs.AlbumID = sgs2.AlbumID
+INNER JOIN Albums AS alb ON sgs.AlbumID = alb.AlbumID
+GROUP BY sgs2.Title, alb.Name
+ORDER BY TotalTimeAlbum DESC
+
+
+-- Lista dos 20 temas de albuns mais rápidos ?
+
+CREATE VIEW Lista20TemasAlbunsMaisRapidos AS
+SELECT TOP(20) sgs2.Title, alb.Name AS AlbumName, 
+sum( 
+DATEPART(SECOND, sgs.Duration) + 60 * 
+DATEPART(MINUTE, sgs.Duration) + 3600 * 
+DATEPART(HOUR, sgs.Duration )) AS TotalTimeAlbum
+FROM Songs AS sgs
+INNER JOIN Songs AS sgs2 ON sgs.AlbumID = sgs2.AlbumID
+INNER JOIN Albums AS alb ON sgs.AlbumID = alb.AlbumID
+GROUP BY sgs2.Title, alb.Name
+ORDER BY TotalTimeAlbum ASC
+
+
+-- Lista dos 10 albuns que demoram mais tempo ?
+
+CREATE VIEW Lista10AlbunsMaisLongos AS
+SELECT TOP(10)
+alb.Name AS AlbumName,
+sum( 
+	DATEPART(SECOND, Duration) + 60 * 
+	DATEPART(MINUTE, Duration) + 3600 * 
+	DATEPART(HOUR, Duration )) AS TotalTimeSec,
+COUNT(sgs.Title) AS QtySongs
+FROM Songs AS sgs
+INNER JOIN Albums AS alb ON alb.AlbumID = sgs.AlbumID
+GROUP BY sgs.AlbumID, alb.Name
+ORDER BY TotalTimeSec DESC
+
+
+-- Quantos temas tem cada album ?
+
+CREATE VIEW QtdTemasPorAlbum AS
+SELECT sgs.AlbumID, alb.Name AS AlbumName, COUNT(sgs.SongID) AS QtySongs
+FROM Songs AS sgs
+INNER JOIN Albums AS alb ON sgs.AlbumID = alb.AlbumID
+GROUP BY sgs.AlbumID, alb.Name
+ORDER BY COUNT(SongID) DESC
+
+
+-- Quantos temas de albuns demoram mais que 5 minutos ?
+
+CREATE VIEW QtdTemasPorAlbumMaisDe5Minutos AS
+SELECT sgs.AlbumID, alb.Name AS AlbumName, COUNT(sgs.SongID) AS QtySongsGreater5min
+FROM Songs AS sgs
+INNER JOIN Albums AS alb ON sgs.AlbumID = alb.AlbumID
+WHERE sgs.Duration > '00:05:00'
+GROUP BY sgs.AlbumID, alb.Name
+ORDER BY COUNT(SongID) DESC
+
+
+-- Quais são as músicas mais ouvidas ?
+
+CREATE VIEW ListaMusicasMaisOuvidas AS
+SELECT sgs.Title AS SongName, art.Name AS ArtistName, COUNT(sgsp.SongPlayID) AS TotalPlays
+FROM Songs AS sgs
+INNER JOIN SongPlays AS sgsp ON sgsp.SongID = sgs.SongID
+INNER JOIN Artists AS art ON art.ArtistID = sgs.ArtistID
+GROUP BY sgs.Title, art.Name
+ORDER BY TotalPlays DESC
+
+
+-- Quais são as músicas mais ouvidas, por país, entre as 0000AM e as 08AM ?
+
+CREATE VIEW ListaMusicasMaisOuvidasPais00AM08AM AS
+WITH PlaysCountryTime1 AS
+(SELECT sgs.Title AS SongName, loc.Country AS Country, COUNT(sgsp.SongPlayID) AS TotalPlays,
+RANK() OVER(PARTITION BY loc.Country ORDER BY COUNT(sgsp.SongPlayID) DESC) AS RankByQty
+FROM Songs AS sgs
+INNER JOIN SongPlays AS sgsp ON sgsp.SongID = sgs.SongID
+INNER JOIN Artists AS art ON art.ArtistID = sgs.ArtistID
+INNER JOIN Location AS loc ON loc.LocationID = sgsp.LocationID
+WHERE CAST(sgsp.StartTime AS time) BETWEEN '00:00' AND '08:00'
+GROUP BY sgs.Title, loc.Country)
+SELECT Country, SongName, TotalPlays
+FROM PlaysCountryTime1
+WHERE RankByQty = 1
+ORDER BY TotalPlays DESC
+
+
+-- Quais são as músicas mais ouvidas, por país, entre as 08:00 e as 16:00 ?
+
+CREATE VIEW ListaMusicasMaisOuvidasPais08AM04PM AS
+WITH PlaysCountryTime2 AS
+(SELECT sgs.Title AS SongName, loc.Country AS Country, COUNT(sgsp.SongPlayID) AS TotalPlays,
+RANK() OVER(PARTITION BY loc.Country ORDER BY COUNT(sgsp.SongPlayID) DESC) AS RankByQty
+FROM Songs AS sgs
+INNER JOIN SongPlays AS sgsp ON sgsp.SongID = sgs.SongID
+INNER JOIN Artists AS art ON art.ArtistID = sgs.ArtistID
+INNER JOIN Location AS loc ON loc.LocationID = sgsp.LocationID
+WHERE CAST(sgsp.StartTime AS time) BETWEEN '08:00' AND '16:00'
+GROUP BY sgs.Title, loc.Country)
+SELECT Country, SongName, TotalPlays
+FROM PlaysCountryTime2
+WHERE RankByQty = 1
+ORDER BY TotalPlays DESC
+
+
+-- Qual o genero musical mais ouvido por país ?
+
+CREATE VIEW ListaGeneroMaisOuvidoPorPais AS
+WITH QtyPlaysCountry AS
+(SELECT loc.Country AS Country, gnr.Name AS Genre, COUNT(gnr.genreID) AS TotalPlays,
+RANK() OVER(PARTITION BY loc.Country ORDER BY COUNT(gnr.genreID) DESC) AS RankByQty
+FROM SongPlays AS sgsp
+INNER JOIN Songs AS sgs ON sgs.SongID = sgsp.SongID
+INNER JOIN Genre AS gnr ON gnr.GenreID = sgs.GenreID
+INNER JOIN Location AS loc ON loc.LocationID = sgsp.LocationID
+GROUP BY loc.Country, gnr.Name)
+SELECT Country, Genre, TotalPlays
+FROM QtyPlaysCountry
+WHERE RankByQty = 1
+ORDER BY TotalPlays DESC
+
+
+-- Qual o genero musical mais ouvido por país, entre as 00:00AM e as 08AM ?
+
+CREATE VIEW GeneroMaisOuvidoPorPais00AM08AM AS
+WITH PlaysGenreCountryTime1 AS
+(SELECT loc.Country AS Country, gnr.Name AS Genre, COUNT(gnr.genreID) AS TotalPlays,
+RANK() OVER(PARTITION BY loc.Country ORDER BY COUNT(gnr.genreID) DESC) AS RankByQty
+FROM SongPlays AS sgsp
+INNER JOIN Songs AS sgs ON sgs.SongID = sgsp.SongID
+INNER JOIN Genre AS gnr ON gnr.GenreID = sgs.GenreID
+INNER JOIN Location AS loc ON loc.LocationID = sgsp.LocationID
+WHERE CAST(sgsp.StartTime AS time) BETWEEN '00:00' AND '08:00'
+GROUP BY loc.Country, gnr.Name)
+SELECT Country, Genre, TotalPlays
+FROM PlaysGenreCountryTime1 
+WHERE RankByQty = 1
+ORDER BY TotalPlays DESC  
+
+
+-- Qual o genero musical mais ouvido por país, entre as 16:00 e as 24:00 ?
+
+CREATE VIEW GeneroMaisOuvidoPorPais04PM00AM AS
+WITH PlaysGenreCountryTime2 AS
+(SELECT loc.Country AS Country, gnr.Name AS Genre, COUNT(gnr.genreID) AS TotalPlays,
+RANK() OVER(PARTITION BY loc.Country ORDER BY COUNT(gnr.genreID) DESC) AS RankByQty
+FROM SongPlays AS sgsp
+INNER JOIN Songs AS sgs ON sgs.SongID = sgsp.SongID
+INNER JOIN Genre AS gnr ON gnr.GenreID = sgs.GenreID
+INNER JOIN Location AS loc ON loc.LocationID = sgsp.LocationID
+WHERE CAST(sgsp.StartTime AS time) BETWEEN '08:00' AND '16:00'
+GROUP BY loc.Country, gnr.Name)
+SELECT Country, Genre, TotalPlays
+FROM PlaysGenreCountryTime2 
+WHERE RankByQty = 1
+ORDER BY TotalPlays DESC
+
