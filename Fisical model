@@ -1,0 +1,188 @@
+For create a fisical model in SSMS, I created Database, tables and constraints (primary e foreign keys)
+
+			//----CREATE DATABASE-----//
+
+			CREATE DATABASE [Music.Streaming]
+
+			ON PRIMARY
+			(Name = 'Music.Streaming',
+			FILENAME = N'C:\Music.Streaming.mdf',
+			size = 50000kb,
+			MAXSIZE = unlimited,
+			FILEGROWTH = 1024KB)
+
+			LOG ON
+			(NAME = 'Music.Streaming_log',
+			FILENAME = N'C:\Music.Streaming.ldf',
+			size = 50000kb,
+			MAXSIZE = unlimited,
+			FILEGROWTH = 10%)
+			GO
+
+
+
+			//----CREATE TABLES-----//
+
+			USE [Music.Streaming]
+
+
+			CREATE TABLE dbo.SongPlays
+			(
+			SongPlayID int not null IDENTITY(1,1),
+			SongID int not null,
+			UserID int not null,
+			LocationID int not null,
+			StartTime datetime not null,
+			EndTime datetime not null,
+			TimeZone nvarchar(max) not null
+			)
+
+			CREATE TABLE dbo.Albums
+			(
+			AlbumID int not null IDENTITY(1,1),
+			ArtistID int not null,
+			[Name] nvarchar(50) not null,
+			ReleaseDate date not null,
+			LabelID int not null
+			)
+
+			CREATE TABLE dbo.Songs
+			(
+			SongID int not null IDENTITY(1,1),
+			ArtistID int not null,
+			AlbumID int not null,
+			Title nvarchar(50) not null,
+			Duration time not null,
+			ReleaseDate date not null,
+			GenreID int not null
+			)
+
+			CREATE TABLE dbo.Genre
+			(
+			GenreID int not null IDENTITY(1,1),
+			[Name] nvarchar(50) not null,
+			)
+
+			CREATE TABLE dbo.Location
+			(
+			LocationID int not null IDENTITY(1,1),
+			TimeZone nvarchar(max) not null,
+			Country nvarchar(50) not null
+			)
+
+			CREATE TABLE dbo.Users
+			(
+			UserID int not null IDENTITY(1,1),
+			FirstName nvarchar(20) not null,
+			LastName nvarchar(20) not null,
+			Gender nchar (1) not null,
+			Email nvarchar(50) not null,
+			[Password] nvarchar(20) not null,
+			BirthDate date not null,
+			DateCreated date not null,
+			LocationID int not null,
+			)
+
+			CREATE TABLE dbo.Labels
+			(
+			LabelID int not null IDENTITY(1,1),
+			[Name] nvarchar(50) not null,
+			LocationID int not null,
+			)
+
+			CREATE TABLE dbo.Artists
+			(
+			ArtistID int not null IDENTITY(1,1),
+			[Name] nvarchar(50) not null,
+			DateCreated date not null,
+			LocationID int not null
+			)
+
+
+			//----CREATE PRIMARY KEYS----//
+
+			USE [Music.Streaming]
+
+			ALTER TABLE dbo.Users
+			add constraint PK_Users_UserID
+			PRIMARY KEY CLUSTERED (UserID asc)
+
+			ALTER TABLE dbo.Labels
+			add constraint PK_Labels_LabelID
+			PRIMARY KEY CLUSTERED (LabelID asc)
+
+			ALTER TABLE dbo.SongPlays
+			add constraint PK_SongPlays_SongPlayID
+			PRIMARY KEY CLUSTERED (SongPlayID asc)
+
+			ALTER TABLE dbo.Albuns
+			add constraint PK_Albuns_AlbumID
+			PRIMARY KEY CLUSTERED (AlbumID asc)
+
+			ALTER TABLE dbo.Songs
+			add constraint PK_Songs_SongID
+			PRIMARY KEY CLUSTERED (SongID asc)
+
+			ALTER TABLE dbo.Location
+			add constraint PK_Location_LocationID
+			PRIMARY KEY CLUSTERED (LocationID asc)
+
+			ALTER TABLE dbo.Genre
+			add constraint PK_Genre_GenreID
+			PRIMARY KEY CLUSTERED (GenreID asc)
+
+			ALTER TABLE dbo.Artists
+			add constraint PK_Artists_ArtistID
+			PRIMARY KEY CLUSTERED (ArtistID asc)
+
+
+
+			//----CREATE FOREIGN KEYS----//
+
+			USE [Music.Streaming]
+
+			ALTER TABLE dbo.Users
+			add constraint FK_Users_LocationID Foreign Key (LocationID)
+			references dbo.[Location] (LocationID)
+
+			ALTER TABLE dbo.Labels
+			add constraint FK_Labels_LocationID Foreign Key (LocationID)
+			references dbo.Location (LocationID)
+
+			ALTER TABLE dbo.Artists
+			add constraint FK_Artists_LocationID Foreign Key (LocationID)
+			references dbo.Location (LocationID)
+
+			ALTER TABLE dbo.SongPlays
+			add constraint FK_SongPlays_LocationID Foreign Key (LocationID)
+			references dbo.Location (LocationID)
+
+			ALTER TABLE dbo.SongPlays
+			add constraint FK_SongPlays_SongID Foreign Key (SongID)
+			references dbo.Songs (SongID)
+
+			ALTER TABLE dbo.SongPlays
+			add constraint FK_SongPlays_UserID Foreign Key (UserID)
+			references dbo.Users (UserID)
+
+			ALTER TABLE dbo.Albuns
+			add constraint FK_Albuns_ArtistID Foreign Key (ArtistID)
+			references dbo.Artists (ArtistID)
+
+			ALTER TABLE dbo.Albuns
+			add constraint FK_Albuns_LabelID Foreign Key (LabelID)
+			references dbo.Labels (LabelID)
+
+			ALTER TABLE dbo.Songs
+			add constraint FK_Songs_ArtistID Foreign Key (ArtistID)
+			references dbo.Artists (ArtistID)
+
+			ALTER TABLE dbo.Songs
+			add constraint FK_Songs_AlbumID Foreign Key (AlbumID)
+			references dbo.Albuns (AlbumID)
+
+			ALTER TABLE dbo.Songs
+			add constraint FK_Songs_GenreID Foreign Key (GenreID)
+			references dbo.Genre (GenreID)
+
+
