@@ -186,3 +186,4 @@ For create a fisical model in SSMS, I created Database, tables and constraints (
 			references dbo.Genre (GenreID)
 
 
+
