@@ -27,12 +27,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"runId": {
-				"type": "string",
-				"defaultValue": "@pipeline().RunId"
-			}
-		},
 		"annotations": []
 	}
 }
