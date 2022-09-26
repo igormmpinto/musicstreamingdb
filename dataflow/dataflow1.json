@@ -21,7 +21,11 @@
 					"name": "songplayscsv"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "dateexport"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          SongPlayID as integer,",
@@ -39,7 +43,8 @@
 				"     inferDriftedColumnTypes: true,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> songplaystable",
-				"songplaystable sink(allowSchemaDrift: true,",
+				"songplaystable derive(ExportDate = currentUTC()) ~> dateexport",
+				"dateexport sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          SongPlayID as string,",
@@ -67,7 +72,8 @@
 				"          EndTime,",
 				"          {StartTime UTC},",
 				"          Latitude,",
-				"          Longitude",
+				"          Longitude,",
+				"          ExportDate",
 				"     )) ~> songplayscsv"
 			]
 		}
