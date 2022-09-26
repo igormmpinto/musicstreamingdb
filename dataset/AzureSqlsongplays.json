@@ -1,0 +1,62 @@
+{
+	"name": "AzureSqlsongplays",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "SongPlayID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SongID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "UserID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LocationID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "StartTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "EndTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "StartTime UTC",
+				"type": "datetimeoffset",
+				"scale": 7
+			},
+			{
+				"name": "Latitude",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Longitude",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "SongPlays"
+		}
+	}
+}

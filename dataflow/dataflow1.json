@@ -1,0 +1,73 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlsongplays",
+						"type": "DatasetReference"
+					},
+					"name": "songplaystable"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "songplaystocsv",
+						"type": "DatasetReference"
+					},
+					"name": "songplayscsv"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          SongPlayID as integer,",
+				"          SongID as integer,",
+				"          UserID as integer,",
+				"          LocationID as integer,",
+				"          StartTime as timestamp,",
+				"          EndTime as timestamp,",
+				"          {StartTime UTC} as string,",
+				"          Latitude as string,",
+				"          Longitude as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> songplaystable",
+				"songplaystable sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SongPlayID as string,",
+				"          SongID as string,",
+				"          UserID as string,",
+				"          LocationID as string,",
+				"          StartTime as string,",
+				"          EndTime as string,",
+				"          {StartTime UTC} as string,",
+				"          Latitude as string,",
+				"          Longitude as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          SongPlayID,",
+				"          SongID,",
+				"          UserID,",
+				"          LocationID,",
+				"          StartTime,",
+				"          EndTime,",
+				"          {StartTime UTC},",
+				"          Latitude,",
+				"          Longitude",
+				"     )) ~> songplayscsv"
+			]
+		}
+	}
+}

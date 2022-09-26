@@ -1,0 +1,60 @@
+{
+	"name": "songplaystocsv",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "songplays.csv",
+				"fileSystem": "musicstreaming"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "SongPlayID",
+				"type": "String"
+			},
+			{
+				"name": "SongID",
+				"type": "String"
+			},
+			{
+				"name": "UserID",
+				"type": "String"
+			},
+			{
+				"name": "LocationID",
+				"type": "String"
+			},
+			{
+				"name": "StartTime",
+				"type": "String"
+			},
+			{
+				"name": "EndTime",
+				"type": "String"
+			},
+			{
+				"name": "StartTime UTC",
+				"type": "String"
+			},
+			{
+				"name": "Latitude",
+				"type": "String"
+			},
+			{
+				"name": "Longitude",
+				"type": "String"
+			}
+		]
+	}
+}
