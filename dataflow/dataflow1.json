@@ -51,6 +51,7 @@
 				"          Latitude as string,",
 				"          Longitude as string",
 				"     ),",
+				"     filePattern:'songplays',",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
