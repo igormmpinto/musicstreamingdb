@@ -21,7 +21,15 @@
 		},
 		"schema": [
 			{
-				"name": "LocationID|TimeZone|Country",
+				"name": "LocationID",
+				"type": "String"
+			},
+			{
+				"name": "TimeZone",
+				"type": "String"
+			},
+			{
+				"name": "Country",
 				"type": "String"
 			}
 		]

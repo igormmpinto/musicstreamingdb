@@ -35,6 +35,22 @@
 					},
 					"name": "genretable",
 					"description": "get data from sql_genre"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_labels",
+						"type": "DatasetReference"
+					},
+					"name": "labelstable",
+					"description": "get data from sql_labels"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_location",
+						"type": "DatasetReference"
+					},
+					"name": "locationtable",
+					"description": "get data from sql_location"
 				}
 			],
 			"sinks": [
@@ -69,6 +85,22 @@
 					},
 					"name": "genrecsv",
 					"description": "paste data to csv_genre"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_labels",
+						"type": "DatasetReference"
+					},
+					"name": "labelscsv",
+					"description": "paste data to csv_labels"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_location",
+						"type": "DatasetReference"
+					},
+					"name": "locationcsv",
+					"description": "paste data to csv_location"
 				}
 			],
 			"transformations": [
@@ -123,6 +155,24 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> genretable",
+				"source(output(",
+				"          LabelID as integer,",
+				"          Name as string,",
+				"          LocationID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> labelstable",
+				"source(output(",
+				"          LocationID as integer,",
+				"          TimeZone as string,",
+				"          Country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> locationtable",
 				"songplaystable derive(ExportDate = currentUTC()) ~> exportdate",
 				"exportdate sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -211,7 +261,41 @@
 				"     mapColumn(",
 				"          GenreID,",
 				"          Name",
-				"     )) ~> genrecsv"
+				"     )) ~> genrecsv",
+				"labelstable sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          LabelID as string,",
+				"          Name as string,",
+				"          LocationID as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          LabelID,",
+				"          Name,",
+				"          LocationID",
+				"     )) ~> labelscsv",
+				"locationtable sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          LocationID as string,",
+				"          TimeZone as string,",
+				"          Country as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          LocationID,",
+				"          TimeZone,",
+				"          Country",
+				"     )) ~> locationcsv"
 			]
 		}
 	}

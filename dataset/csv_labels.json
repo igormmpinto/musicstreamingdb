@@ -21,7 +21,15 @@
 		},
 		"schema": [
 			{
-				"name": "LabelID|Name|LocationID",
+				"name": "LabelID",
+				"type": "String"
+			},
+			{
+				"name": "Name",
+				"type": "String"
+			},
+			{
+				"name": "LocationID",
 				"type": "String"
 			}
 		]
