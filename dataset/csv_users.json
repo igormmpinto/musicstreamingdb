@@ -21,7 +21,39 @@
 		},
 		"schema": [
 			{
-				"name": "UserID|FirstName|LastName|Gender|Email|Password|BirthDate|DateCreated|LocationID",
+				"name": "UserID",
+				"type": "String"
+			},
+			{
+				"name": "FirstName",
+				"type": "String"
+			},
+			{
+				"name": "LastName",
+				"type": "String"
+			},
+			{
+				"name": "Gender",
+				"type": "String"
+			},
+			{
+				"name": "Email",
+				"type": "String"
+			},
+			{
+				"name": "Password",
+				"type": "String"
+			},
+			{
+				"name": "BirthDate",
+				"type": "String"
+			},
+			{
+				"name": "DateCreated",
+				"type": "String"
+			},
+			{
+				"name": "LocationID",
 				"type": "String"
 			}
 		]

@@ -51,6 +51,22 @@
 					},
 					"name": "locationtable",
 					"description": "get data from sql_location"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_songs",
+						"type": "DatasetReference"
+					},
+					"name": "songstable",
+					"description": "get data from sql_songs"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_users",
+						"type": "DatasetReference"
+					},
+					"name": "userstable",
+					"description": "get data from sql_users"
 				}
 			],
 			"sinks": [
@@ -101,6 +117,22 @@
 					},
 					"name": "locationcsv",
 					"description": "paste data to csv_location"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_songs",
+						"type": "DatasetReference"
+					},
+					"name": "songscsv",
+					"description": "paste data to csv_songs"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_users",
+						"type": "DatasetReference"
+					},
+					"name": "userscsv",
+					"description": "paste data to csv_users"
 				}
 			],
 			"transformations": [
@@ -173,6 +205,34 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> locationtable",
+				"source(output(",
+				"          SongID as integer,",
+				"          ArtistID as integer,",
+				"          AlbumID as integer,",
+				"          Title as string,",
+				"          Duration as timestamp,",
+				"          ReleaseDate as date,",
+				"          GenreID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> songstable",
+				"source(output(",
+				"          UserID as integer,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Gender as string,",
+				"          Email as string,",
+				"          Password as string,",
+				"          BirthDate as date,",
+				"          DateCreated as date,",
+				"          LocationID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> userstable",
 				"songplaystable derive(ExportDate = currentUTC()) ~> exportdate",
 				"exportdate sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -295,7 +355,61 @@
 				"          LocationID,",
 				"          TimeZone,",
 				"          Country",
-				"     )) ~> locationcsv"
+				"     )) ~> locationcsv",
+				"songstable sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SongID as string,",
+				"          ArtistID as string,",
+				"          AlbumID as string,",
+				"          Title as string,",
+				"          Duration as string,",
+				"          ReleaseDate as string,",
+				"          GenreID as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          SongID,",
+				"          ArtistID,",
+				"          AlbumID,",
+				"          Title,",
+				"          Duration,",
+				"          ReleaseDate,",
+				"          GenreID",
+				"     )) ~> songscsv",
+				"userstable sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          UserID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Gender as string,",
+				"          Email as string,",
+				"          Password as string,",
+				"          BirthDate as string,",
+				"          DateCreated as string,",
+				"          LocationID as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          UserID,",
+				"          FirstName,",
+				"          LastName,",
+				"          Gender,",
+				"          Email,",
+				"          Password,",
+				"          BirthDate,",
+				"          DateCreated,",
+				"          LocationID",
+				"     )) ~> userscsv"
 			]
 		}
 	}

@@ -21,7 +21,31 @@
 		},
 		"schema": [
 			{
-				"name": "SongID|ArtistID|AlbumID|Title|Duration|ReleaseDate|GenreID",
+				"name": "SongID",
+				"type": "String"
+			},
+			{
+				"name": "ArtistID",
+				"type": "String"
+			},
+			{
+				"name": "AlbumID",
+				"type": "String"
+			},
+			{
+				"name": "Title",
+				"type": "String"
+			},
+			{
+				"name": "Duration",
+				"type": "String"
+			},
+			{
+				"name": "ReleaseDate",
+				"type": "String"
+			},
+			{
+				"name": "GenreID",
 				"type": "String"
 			}
 		]
