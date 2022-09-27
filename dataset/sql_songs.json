@@ -1,0 +1,50 @@
+{
+	"name": "sql_songs",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "SongID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "ArtistID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AlbumID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Title",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Duration",
+				"type": "time",
+				"scale": 7
+			},
+			{
+				"name": "ReleaseDate",
+				"type": "date"
+			},
+			{
+				"name": "GenreID",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Songs"
+		}
+	}
+}
