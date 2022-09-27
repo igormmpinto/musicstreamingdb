@@ -60,7 +60,6 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
-				"          SongPlayID,",
 				"          SongID,",
 				"          UserID,",
 				"          LocationID,",
