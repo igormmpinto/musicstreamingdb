@@ -1,9 +1,9 @@
 {
-	"name": "songplaysdbtocsv",
+	"name": "data_sql_to_csv_files",
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "dataflow_csv_to_sql",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "dataflow_csv_to_sql",
+						"referenceName": "dataflow_sql_to_csv",
 						"type": "DataFlowReference"
 					},
 					"compute": {
