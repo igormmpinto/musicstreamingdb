@@ -1,5 +1,5 @@
 {
-	"name": "dataflow1",
+	"name": "dataflow_csv_to_sql",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -13,10 +13,10 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "sql_songplays",
+						"referenceName": "sql_albums",
 						"type": "DatasetReference"
 					},
-					"name": "source1"
+					"name": "albumstable"
 				}
 			],
 			"sinks": [
@@ -30,7 +30,10 @@
 			],
 			"transformations": [
 				{
-					"name": "dateexport"
+					"name": "exportdate"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -51,22 +54,19 @@
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> songplaystable",
 				"source(output(",
-				"          SongPlayID as integer,",
-				"          SongID as integer,",
-				"          UserID as integer,",
-				"          LocationID as integer,",
-				"          StartTime as timestamp,",
-				"          EndTime as timestamp,",
-				"          {StartTime UTC} as string,",
-				"          Latitude as string,",
-				"          Longitude as string",
+				"          AlbumID as integer,",
+				"          ArtistID as integer,",
+				"          Name as string,",
+				"          ReleaseDate as date,",
+				"          LabelID as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
-				"     format: 'table') ~> source1",
-				"songplaystable derive(ExportDate = currentUTC()) ~> dateexport",
-				"dateexport sink(allowSchemaDrift: true,",
+				"     format: 'table') ~> albumstable",
+				"songplaystable derive(ExportDate = currentUTC()) ~> exportdate",
+				"albumstable derive() ~> derivedColumn1",
+				"exportdate sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          SongPlayID as string,",

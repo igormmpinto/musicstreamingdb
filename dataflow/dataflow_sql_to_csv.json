@@ -1,0 +1,218 @@
+{
+	"name": "dataflow_sql_to_csv",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sql_songplays",
+						"type": "DatasetReference"
+					},
+					"name": "songplaystable",
+					"description": "get data from sql_songplays"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_albums",
+						"type": "DatasetReference"
+					},
+					"name": "albumstable",
+					"description": "get data from sql_albums"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_artists",
+						"type": "DatasetReference"
+					},
+					"name": "artiststable",
+					"description": "get data from sql_artists"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_genre",
+						"type": "DatasetReference"
+					},
+					"name": "genretable",
+					"description": "get data from sql_genre"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "csv_songplays",
+						"type": "DatasetReference"
+					},
+					"name": "songplayscsv",
+					"description": "paste data to csv_songplays"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_albums",
+						"type": "DatasetReference"
+					},
+					"name": "albumscsv",
+					"description": "paste data to csv_albums"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_artists",
+						"type": "DatasetReference"
+					},
+					"name": "artistscsv",
+					"description": "paste data to csv_artists"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_genre",
+						"type": "DatasetReference"
+					},
+					"name": "genrecsv",
+					"description": "paste data to csv_genre"
+				}
+			],
+			"transformations": [
+				{
+					"name": "exportdate",
+					"description": "Add new column with export date"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          SongPlayID as integer,",
+				"          SongID as integer,",
+				"          UserID as integer,",
+				"          LocationID as integer,",
+				"          StartTime as timestamp,",
+				"          EndTime as timestamp,",
+				"          {StartTime UTC} as string,",
+				"          Latitude as string,",
+				"          Longitude as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> songplaystable",
+				"source(output(",
+				"          AlbumID as integer,",
+				"          ArtistID as integer,",
+				"          Name as string,",
+				"          ReleaseDate as date,",
+				"          LabelID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> albumstable",
+				"source(output(",
+				"          ArtistID as integer,",
+				"          Name as string,",
+				"          DateCreated as date,",
+				"          LocationID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> artiststable",
+				"source(output(",
+				"          GenreID as integer,",
+				"          Name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> genretable",
+				"songplaystable derive(ExportDate = currentUTC()) ~> exportdate",
+				"exportdate sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SongPlayID as string,",
+				"          SongID as string,",
+				"          UserID as string,",
+				"          LocationID as string,",
+				"          StartTime as string,",
+				"          EndTime as string,",
+				"          {StartTime UTC} as string,",
+				"          Latitude as string,",
+				"          Longitude as string",
+				"     ),",
+				"     filePattern:'songplays',",
+				"     umask: 0222,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          SongPlayID,",
+				"          SongID,",
+				"          UserID,",
+				"          LocationID,",
+				"          StartTime,",
+				"          EndTime,",
+				"          {StartTime UTC},",
+				"          Latitude,",
+				"          Longitude,",
+				"          ExportDate",
+				"     )) ~> songplayscsv",
+				"albumstable sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          AlbumID as string,",
+				"          ArtistID as string,",
+				"          Name as string,",
+				"          ReleaseDate as string,",
+				"          LabelID as string",
+				"     ),",
+				"     filePattern:'albums',",
+				"     umask: 0222,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          AlbumID,",
+				"          ArtistID,",
+				"          Name,",
+				"          ReleaseDate,",
+				"          LabelID",
+				"     )) ~> albumscsv",
+				"artiststable sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ArtistID as string,",
+				"          Name as string,",
+				"          DateCreated as string,",
+				"          LocationID as string",
+				"     ),",
+				"     filePattern:'artists',",
+				"     umask: 0222,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          ArtistID,",
+				"          Name,",
+				"          DateCreated,",
+				"          LocationID",
+				"     )) ~> artistscsv",
+				"genretable sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          GenreID as string,",
+				"          Name as string",
+				"     ),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          GenreID,",
+				"          Name",
+				"     )) ~> genrecsv"
+			]
+		}
+	}
+}

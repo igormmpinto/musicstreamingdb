@@ -21,7 +21,19 @@
 		},
 		"schema": [
 			{
-				"name": "ArtistID|Name|DateCreated|LocationID",
+				"name": "ArtistID",
+				"type": "String"
+			},
+			{
+				"name": "Name",
+				"type": "String"
+			},
+			{
+				"name": "DateCreated",
+				"type": "String"
+			},
+			{
+				"name": "LocationID",
 				"type": "String"
 			}
 		]

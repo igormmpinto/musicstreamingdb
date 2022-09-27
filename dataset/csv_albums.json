@@ -21,7 +21,23 @@
 		},
 		"schema": [
 			{
-				"name": "AlbumID|ArtistID|Name|ReleaseDate|LabelID",
+				"name": "AlbumID",
+				"type": "String"
+			},
+			{
+				"name": "ArtistID",
+				"type": "String"
+			},
+			{
+				"name": "Name",
+				"type": "String"
+			},
+			{
+				"name": "ReleaseDate",
+				"type": "String"
+			},
+			{
+				"name": "LabelID",
 				"type": "String"
 			}
 		]

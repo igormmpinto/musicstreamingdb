@@ -21,7 +21,11 @@
 		},
 		"schema": [
 			{
-				"name": "GenreID|Name",
+				"name": "GenreID",
+				"type": "String"
+			},
+			{
+				"name": "Name",
 				"type": "String"
 			}
 		]
