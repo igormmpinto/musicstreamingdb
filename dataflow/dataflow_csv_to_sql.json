@@ -1,0 +1,77 @@
+{
+	"name": "dataflow_csv_to_sql",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "csv_songplays",
+						"type": "DatasetReference"
+					},
+					"name": "songplayscsv"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sql_songplays",
+						"type": "DatasetReference"
+					},
+					"name": "songplaystosql"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          SongPlayID as integer,",
+				"          SongID as integer,",
+				"          UserID as integer,",
+				"          LocationID as integer,",
+				"          StartTime as timestamp,",
+				"          EndTime as timestamp,",
+				"          {StartTime UTC} as timestamp,",
+				"          Latitude as string,",
+				"          Longitude as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> songplayscsv",
+				"songplayscsv sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SongPlayID as integer,",
+				"          SongID as integer,",
+				"          UserID as integer,",
+				"          LocationID as integer,",
+				"          StartTime as timestamp,",
+				"          EndTime as timestamp,",
+				"          {StartTime UTC} as string,",
+				"          Latitude as string,",
+				"          Longitude as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          SongPlayID,",
+				"          SongID,",
+				"          UserID,",
+				"          LocationID,",
+				"          StartTime,",
+				"          EndTime,",
+				"          {StartTime UTC},",
+				"          Latitude,",
+				"          Longitude",
+				"     ),",
+				"     partitionBy('roundRobin', 4)) ~> songplaystosql"
+			]
+		}
+	}
+}
