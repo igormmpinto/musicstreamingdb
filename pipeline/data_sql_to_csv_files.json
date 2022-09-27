@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "dataflow_csv_to_sql",
+				"name": "dataflow_sql_to_csv",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
