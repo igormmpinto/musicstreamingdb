@@ -1,0 +1,29 @@
+{
+	"name": "csv_location",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "location.csv",
+				"folderPath": "location",
+				"fileSystem": "musicstreaming"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "LocationID|TimeZone|Country",
+				"type": "String"
+			}
+		]
+	}
+}

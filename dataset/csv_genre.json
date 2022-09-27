@@ -1,0 +1,29 @@
+{
+	"name": "csv_genre",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "genre.csv",
+				"folderPath": "genre",
+				"fileSystem": "musicstreaming"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "GenreID|Name",
+				"type": "String"
+			}
+		]
+	}
+}

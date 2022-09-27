@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlsongplays",
+	"name": "sql_songplays",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase",

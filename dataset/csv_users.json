@@ -1,0 +1,29 @@
+{
+	"name": "csv_users",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "users.csv",
+				"folderPath": "users",
+				"fileSystem": "musicstreaming"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "UserID|FirstName|LastName|Gender|Email|Password|BirthDate|DateCreated|LocationID",
+				"type": "String"
+			}
+		]
+	}
+}

@@ -6,16 +6,23 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "AzureSqlsongplays",
+						"referenceName": "sql_songplays",
 						"type": "DatasetReference"
 					},
 					"name": "songplaystable"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_songplays",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "songplaystocsv",
+						"referenceName": "csv_songplays",
 						"type": "DatasetReference"
 					},
 					"name": "songplayscsv"
@@ -43,6 +50,21 @@
 				"     inferDriftedColumnTypes: true,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> songplaystable",
+				"source(output(",
+				"          SongPlayID as integer,",
+				"          SongID as integer,",
+				"          UserID as integer,",
+				"          LocationID as integer,",
+				"          StartTime as timestamp,",
+				"          EndTime as timestamp,",
+				"          {StartTime UTC} as string,",
+				"          Latitude as string,",
+				"          Longitude as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
 				"songplaystable derive(ExportDate = currentUTC()) ~> dateexport",
 				"dateexport sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",

@@ -1,0 +1,29 @@
+{
+	"name": "csv_artists",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "artists.csv",
+				"folderPath": "artists",
+				"fileSystem": "musicstreaming"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ArtistID|Name|DateCreated|LocationID",
+				"type": "String"
+			}
+		]
+	}
+}

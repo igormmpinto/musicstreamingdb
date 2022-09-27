@@ -1,0 +1,29 @@
+{
+	"name": "csv_songs",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "songs.csv",
+				"folderPath": "songs",
+				"fileSystem": "musicstreaming"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "SongID|ArtistID|AlbumID|Title|Duration|ReleaseDate|GenreID",
+				"type": "String"
+			}
+		]
+	}
+}

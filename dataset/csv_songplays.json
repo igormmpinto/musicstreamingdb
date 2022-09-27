@@ -1,5 +1,5 @@
 {
-	"name": "songplaystocsv",
+	"name": "csv_songplays",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorage",
