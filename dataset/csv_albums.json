@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "albums.csv",
 				"folderPath": "albums",
 				"fileSystem": "musicstreaming"
 			},
@@ -19,27 +18,6 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": [
-			{
-				"name": "AlbumID",
-				"type": "String"
-			},
-			{
-				"name": "ArtistID",
-				"type": "String"
-			},
-			{
-				"name": "Name",
-				"type": "String"
-			},
-			{
-				"name": "ReleaseDate",
-				"type": "String"
-			},
-			{
-				"name": "LabelID",
-				"type": "String"
-			}
-		]
+		"schema": []
 	}
 }
