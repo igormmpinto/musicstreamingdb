@@ -410,7 +410,6 @@
 				"     saveOrder: 8,",
 				"     errorHandlingOption: 'stopOnFirstError',",
 				"     mapColumn(",
-				"          SongPlayID,",
 				"          SongID,",
 				"          UserID,",
 				"          LocationID,",
