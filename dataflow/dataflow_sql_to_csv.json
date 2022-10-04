@@ -275,7 +275,6 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     saveOrder: 1,",
 				"     mapColumn(",
 				"          AlbumID,",
 				"          ArtistID,",
