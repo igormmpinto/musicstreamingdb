@@ -18,6 +18,27 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": []
+		"schema": [
+			{
+				"name": "AlbumID",
+				"type": "String"
+			},
+			{
+				"name": "ArtistID",
+				"type": "String"
+			},
+			{
+				"name": "Name",
+				"type": "String"
+			},
+			{
+				"name": "ReleaseDate",
+				"type": "String"
+			},
+			{
+				"name": "LabelID",
+				"type": "String"
+			}
+		]
 	}
 }
