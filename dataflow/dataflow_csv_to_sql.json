@@ -24,6 +24,27 @@
 						"type": "DatasetReference"
 					},
 					"name": "artistscsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_genre",
+						"type": "DatasetReference"
+					},
+					"name": "genrecsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_labels",
+						"type": "DatasetReference"
+					},
+					"name": "labelscsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_location",
+						"type": "DatasetReference"
+					},
+					"name": "locationcsv"
 				}
 			],
 			"sinks": [
@@ -51,6 +72,27 @@
 						"type": "DatasetReference"
 					},
 					"name": "artiststosql"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_genre",
+						"type": "DatasetReference"
+					},
+					"name": "genretosql"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_labels",
+						"type": "DatasetReference"
+					},
+					"name": "labelstosql"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_location",
+						"type": "DatasetReference"
+					},
+					"name": "locationtosql"
 				}
 			],
 			"transformations": [],
@@ -88,6 +130,29 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> artistscsv",
+				"source(output(",
+				"          GenreID as integer,",
+				"          Name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> genrecsv",
+				"source(output(",
+				"          LabelID as integer,",
+				"          Name as string,",
+				"          LocationID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> labelscsv",
+				"source(output(",
+				"          LocationID as integer,",
+				"          TimeZone as string,",
+				"          Country as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> locationcsv",
 				"songplayscsv sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -169,7 +234,62 @@
 				"          Name,",
 				"          DateCreated,",
 				"          LocationID",
-				"     )) ~> artiststosql"
+				"     )) ~> artiststosql",
+				"genrecsv sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          GenreID as integer,",
+				"          Name as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['ALTER TABLE [dbo].Songs DROP CONSTRAINT FK_Songs_GenreID;\\n','TRUNCATE TABLE [dbo].Genre;'],",
+				"     postSQLs:['ALTER TABLE [dbo].Songs  WITH NOCHECK ADD  CONSTRAINT FK_Songs_GenreID FOREIGN KEY(GenreID)\\nREFERENCES [dbo].Genre (GenreID)'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Name",
+				"     )) ~> genretosql",
+				"labelscsv sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          LabelID as integer,",
+				"          Name as string,",
+				"          LocationID as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['ALTER TABLE [dbo].Albums DROP CONSTRAINT [FK_Albuns_LabelID];','TRUNCATE TABLE [dbo].[Labels];'],",
+				"     postSQLs:['ALTER TABLE [dbo].Albums  WITH NOCHECK ADD  CONSTRAINT [FK_Albuns_LabelID] FOREIGN KEY([LabelID])\\nREFERENCES [dbo].[Labels] ([LabelID])'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Name,",
+				"          LocationID",
+				"     )) ~> labelstosql",
+				"locationcsv sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          LocationID as integer,",
+				"          TimeZone as string,",
+				"          Country as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> locationtosql"
 			]
 		}
 	}
