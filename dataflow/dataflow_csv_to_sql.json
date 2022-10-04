@@ -113,6 +113,8 @@
 				"     upsertable:false,",
 				"     truncate:true,",
 				"     format: 'table',",
+				"     preSQLs:['ALTER TABLE [dbo].Songs DROP CONSTRAINT FK_Songs_AlbumID;\\n'],",
+				"     postSQLs:['ALTER TABLE [dbo].Songs  WITH NOCHECK ADD  CONSTRAINT FK_Songs_AlbumID FOREIGN KEY(AlbumID)\\nREFERENCES [dbo].Albums (AlbumID)'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
