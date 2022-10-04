@@ -172,7 +172,7 @@
 				"          ArtistID as integer,",
 				"          AlbumID as integer,",
 				"          Title as string,",
-				"          Duration as timestamp 'HH:mm:ss',",
+				"          Duration as timestamp 'HH:mm:ss.00000',",
 				"          ReleaseDate as date,",
 				"          GenreID as integer",
 				"     ),",

@@ -57,8 +57,7 @@
 						"referenceName": "sql_songs",
 						"type": "DatasetReference"
 					},
-					"name": "songstable",
-					"description": "get data from sql_songs"
+					"name": "songstable"
 				},
 				{
 					"dataset": {
@@ -204,7 +203,7 @@
 				"          ArtistID as integer,",
 				"          AlbumID as integer,",
 				"          Title as string,",
-				"          Duration as timestamp,",
+				"          Duration as string,",
 				"          ReleaseDate as date,",
 				"          GenreID as integer",
 				"     ),",
