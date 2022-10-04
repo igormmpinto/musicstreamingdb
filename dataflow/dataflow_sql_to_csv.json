@@ -135,12 +135,7 @@
 					"description": "paste data to csv_users"
 				}
 			],
-			"transformations": [
-				{
-					"name": "exportdate",
-					"description": "Add new column with export date"
-				}
-			],
+			"transformations": [],
 			"scriptLines": [
 				"source(output(",
 				"          SongPlayID as integer,",
@@ -155,7 +150,6 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     inferDriftedColumnTypes: true,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> songplaystable",
 				"source(output(",
@@ -233,8 +227,7 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> userstable",
-				"songplaystable derive(ExportDate = currentUTC()) ~> exportdate",
-				"exportdate sink(allowSchemaDrift: true,",
+				"songplaystable sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          SongPlayID as string,",
@@ -263,8 +256,7 @@
 				"          EndTime,",
 				"          {StartTime UTC},",
 				"          Latitude,",
-				"          Longitude,",
-				"          ExportDate",
+				"          Longitude",
 				"     ),",
 				"     partitionBy('roundRobin', 5)) ~> songplayscsv",
 				"albumstable sink(allowSchemaDrift: true,",
