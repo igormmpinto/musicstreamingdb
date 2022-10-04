@@ -45,6 +45,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "locationcsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_songs",
+						"type": "DatasetReference"
+					},
+					"name": "songscsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_users",
+						"type": "DatasetReference"
+					},
+					"name": "userscsv"
 				}
 			],
 			"sinks": [
@@ -93,6 +107,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "locationtosql"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_songs",
+						"type": "DatasetReference"
+					},
+					"name": "songstosql"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_users",
+						"type": "DatasetReference"
+					},
+					"name": "userstosql"
 				}
 			],
 			"transformations": [],
@@ -153,6 +181,32 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> locationcsv",
+				"source(output(",
+				"          SongID as integer,",
+				"          ArtistID as integer,",
+				"          AlbumID as integer,",
+				"          Title as string,",
+				"          Duration as timestamp 'HH:mm:ss',",
+				"          ReleaseDate as date,",
+				"          GenreID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> songscsv",
+				"source(output(",
+				"          UserID as integer,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Gender as string,",
+				"          Email as string,",
+				"          Password as string,",
+				"          BirthDate as date,",
+				"          DateCreated as date,",
+				"          LocationID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> userscsv",
 				"songplayscsv sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -287,9 +341,77 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
+				"     preSQLs:['ALTER TABLE [dbo].Artists DROP CONSTRAINT FK_Artists_LocationID;\\nALTER TABLE [dbo].Labels DROP CONSTRAINT FK_Labels_LocationID;\\nALTER TABLE [dbo].SongPlays DROP CONSTRAINT FK_SongPlays_LocationID;\\nALTER TABLE [dbo].Users DROP CONSTRAINT FK_Users_LocationID;','TRUNCATE TABLE [dbo].[Location];'],",
+				"     postSQLs:['ALTER TABLE [dbo].Artists  WITH NOCHECK ADD  CONSTRAINT FK_Artists_LocationID FOREIGN KEY(LocationID)\\nREFERENCES [dbo].[Location] (LocationID);\\nALTER TABLE [dbo].Labels  WITH NOCHECK ADD  CONSTRAINT FK_Labels_LocationID FOREIGN KEY(LocationID)\\nREFERENCES [dbo].[Location] (LocationID);\\nALTER TABLE [dbo].SongPlays  WITH NOCHECK ADD  CONSTRAINT FK_SongPlays_LocationID FOREIGN KEY(LocationID)\\nREFERENCES [dbo].[Location] (LocationID);\\nALTER TABLE [dbo].Users  WITH NOCHECK ADD  CONSTRAINT FK_Users_LocationID FOREIGN KEY(LocationID)\\nREFERENCES [dbo].[Location] (LocationID);'],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> locationtosql"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          TimeZone,",
+				"          Country",
+				"     )) ~> locationtosql",
+				"songscsv sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SongID as integer,",
+				"          ArtistID as integer,",
+				"          AlbumID as integer,",
+				"          Title as string,",
+				"          Duration as timestamp,",
+				"          ReleaseDate as date,",
+				"          GenreID as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['ALTER TABLE [dbo].[SongPlays] DROP CONSTRAINT [FK_SongPlays_SongID];','TRUNCATE TABLE [dbo].[Songs];'],",
+				"     postSQLs:['ALTER TABLE [dbo].[SongPlays]  WITH NOCHECK ADD  CONSTRAINT [FK_SongPlays_SongID] FOREIGN KEY([SongID])\\nREFERENCES [dbo].[Songs] ([SongID])'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          ArtistID,",
+				"          AlbumID,",
+				"          Title,",
+				"          Duration,",
+				"          ReleaseDate,",
+				"          GenreID",
+				"     )) ~> songstosql",
+				"userscsv sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          UserID as integer,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Gender as string,",
+				"          Email as string,",
+				"          Password as string,",
+				"          BirthDate as date,",
+				"          DateCreated as date,",
+				"          LocationID as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['ALTER TABLE [dbo].[SongPlays] DROP CONSTRAINT [FK_SongPlays_UserID];','TRUNCATE TABLE [dbo].[Users];'],",
+				"     postSQLs:['ALTER TABLE [dbo].[SongPlays]  WITH NOCHECK ADD  CONSTRAINT [FK_SongPlays_UserID] FOREIGN KEY([UserID])\\nREFERENCES [dbo].[Users] ([UserID])'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          FirstName,",
+				"          LastName,",
+				"          Gender,",
+				"          Email,",
+				"          Password,",
+				"          BirthDate,",
+				"          DateCreated,",
+				"          LocationID",
+				"     )) ~> userstosql"
 			]
 		}
 	}
