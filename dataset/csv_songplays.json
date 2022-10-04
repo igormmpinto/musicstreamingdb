@@ -10,7 +10,6 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "songplays-00001.csv",
 				"folderPath": "songplays",
 				"fileSystem": "musicstreaming"
 			},
