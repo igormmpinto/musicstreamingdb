@@ -52,6 +52,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "userscsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_songplays",
+						"type": "DatasetReference"
+					},
+					"name": "songplayscsv"
 				}
 			],
 			"sinks": [
@@ -179,6 +186,20 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> userscsv",
+				"source(output(",
+				"          SongPlayID as string,",
+				"          SongID as string,",
+				"          UserID as string,",
+				"          LocationID as string,",
+				"          StartTime as string,",
+				"          EndTime as string,",
+				"          {StartTime UTC} as string,",
+				"          Latitude as string,",
+				"          Longitude as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> songplayscsv",
 				"albumscsv sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
