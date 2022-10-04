@@ -6,13 +6,6 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "csv_songplays",
-						"type": "DatasetReference"
-					},
-					"name": "songplayscsv"
-				},
-				{
-					"dataset": {
 						"referenceName": "csv_albums",
 						"type": "DatasetReference"
 					},
@@ -62,13 +55,6 @@
 				}
 			],
 			"sinks": [
-				{
-					"dataset": {
-						"referenceName": "sql_songplays",
-						"type": "DatasetReference"
-					},
-					"name": "songplaystosql"
-				},
 				{
 					"dataset": {
 						"referenceName": "sql_albums",
@@ -125,20 +111,6 @@
 			],
 			"transformations": [],
 			"scriptLines": [
-				"source(output(",
-				"          SongPlayID as integer,",
-				"          SongID as integer,",
-				"          UserID as integer,",
-				"          LocationID as integer,",
-				"          StartTime as timestamp,",
-				"          EndTime as timestamp,",
-				"          {StartTime UTC} as timestamp,",
-				"          Latitude as string,",
-				"          Longitude as string",
-				"     ),",
-				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     ignoreNoFilesFound: false) ~> songplayscsv",
 				"source(output(",
 				"          AlbumID as integer,",
 				"          ArtistID as integer,",
@@ -207,39 +179,6 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> userscsv",
-				"songplayscsv sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          SongPlayID as integer,",
-				"          SongID as integer,",
-				"          UserID as integer,",
-				"          LocationID as integer,",
-				"          StartTime as timestamp,",
-				"          EndTime as timestamp,",
-				"          {StartTime UTC} as string,",
-				"          Latitude as string,",
-				"          Longitude as string",
-				"     ),",
-				"     deletable:false,",
-				"     insertable:true,",
-				"     updateable:false,",
-				"     upsertable:false,",
-				"     truncate:true,",
-				"     format: 'table',",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     mapColumn(",
-				"          SongID,",
-				"          UserID,",
-				"          LocationID,",
-				"          StartTime,",
-				"          EndTime,",
-				"          {StartTime UTC},",
-				"          Latitude,",
-				"          Longitude",
-				"     ),",
-				"     partitionBy('roundRobin', 4)) ~> songplaystosql",
 				"albumscsv sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
