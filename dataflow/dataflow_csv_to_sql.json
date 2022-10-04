@@ -10,6 +10,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "songplayscsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_albums",
+						"type": "DatasetReference"
+					},
+					"name": "albumscsv"
 				}
 			],
 			"sinks": [
@@ -19,6 +26,17 @@
 						"type": "DatasetReference"
 					},
 					"name": "songplaystosql"
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_albums",
+						"type": "DatasetReference"
+					},
+					"name": "albumstosql",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [],
@@ -37,6 +55,16 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> songplayscsv",
+				"source(output(",
+				"          AlbumID as integer,",
+				"          ArtistID as integer,",
+				"          Name as string,",
+				"          ReleaseDate as timestamp,",
+				"          LabelID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> albumscsv",
 				"songplayscsv sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -69,7 +97,26 @@
 				"          Latitude,",
 				"          Longitude",
 				"     ),",
-				"     partitionBy('roundRobin', 4)) ~> songplaystosql"
+				"     partitionBy('roundRobin', 4)) ~> songplaystosql",
+				"albumscsv sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          AlbumID as integer,",
+				"          ArtistID as integer,",
+				"          Name as string,",
+				"          ReleaseDate as date,",
+				"          LabelID as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     truncate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     outputAssertFailedRows: true) ~> albumstosql"
 			]
 		}
 	}
