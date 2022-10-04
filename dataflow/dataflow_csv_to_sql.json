@@ -17,6 +17,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "albumscsv"
+				},
+				{
+					"dataset": {
+						"referenceName": "csv_artists",
+						"type": "DatasetReference"
+					},
+					"name": "artistscsv"
 				}
 			],
 			"sinks": [
@@ -37,6 +44,13 @@
 						"referenceName": "AzureDataLakeStorage",
 						"type": "LinkedServiceReference"
 					}
+				},
+				{
+					"dataset": {
+						"referenceName": "sql_artists",
+						"type": "DatasetReference"
+					},
+					"name": "artiststosql"
 				}
 			],
 			"transformations": [],
@@ -65,6 +79,15 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> albumscsv",
+				"source(output(",
+				"          ArtistID as integer,",
+				"          Name as string,",
+				"          DateCreated as date,",
+				"          LocationID as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> artistscsv",
 				"songplayscsv sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -123,7 +146,30 @@
 				"          Name,",
 				"          ReleaseDate,",
 				"          LabelID",
-				"     )) ~> albumstosql"
+				"     )) ~> albumstosql",
+				"artistscsv sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          ArtistID as integer,",
+				"          Name as string,",
+				"          DateCreated as date,",
+				"          LocationID as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['ALTER TABLE [dbo].Albums DROP CONSTRAINT FK_Albuns_ArtistID;\\nALTER TABLE [dbo].Songs DROP CONSTRAINT FK_Songs_ArtistID;','TRUNCATE TABLE [dbo].Artists;'],",
+				"     postSQLs:['ALTER TABLE [dbo].Albums  WITH NOCHECK ADD  CONSTRAINT FK_Albuns_ArtistID FOREIGN KEY(ArtistID)\\nREFERENCES [dbo].Artists (ArtistID);\\nALTER TABLE [dbo].Songs  WITH NOCHECK ADD  CONSTRAINT FK_Songs_ArtistID FOREIGN KEY(ArtistID)\\nREFERENCES [dbo].Artists (ArtistID);'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Name,",
+				"          DateCreated,",
+				"          LocationID",
+				"     )) ~> artiststosql"
 			]
 		}
 	}
