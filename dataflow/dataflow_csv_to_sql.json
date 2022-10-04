@@ -56,11 +56,11 @@
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> songplayscsv",
 				"source(output(",
-				"          AlbumID as string,",
-				"          ArtistID as string,",
+				"          AlbumID as integer,",
+				"          ArtistID as integer,",
 				"          Name as string,",
-				"          ReleaseDate as string,",
-				"          LabelID as string",
+				"          ReleaseDate as date,",
+				"          LabelID as integer",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -116,7 +116,13 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError',",
-				"     outputAssertFailedRows: true) ~> albumstosql"
+				"     outputAssertFailedRows: true,",
+				"     mapColumn(",
+				"          ArtistID,",
+				"          Name,",
+				"          ReleaseDate,",
+				"          LabelID",
+				"     )) ~> albumstosql"
 			]
 		}
 	}
