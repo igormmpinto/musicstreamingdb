@@ -78,49 +78,77 @@
 						"referenceName": "sql_artists",
 						"type": "DatasetReference"
 					},
-					"name": "artiststosql"
+					"name": "artiststosql",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage",
+						"type": "LinkedServiceReference"
+					}
 				},
 				{
 					"dataset": {
 						"referenceName": "sql_genre",
 						"type": "DatasetReference"
 					},
-					"name": "genretosql"
+					"name": "genretosql",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage",
+						"type": "LinkedServiceReference"
+					}
 				},
 				{
 					"dataset": {
 						"referenceName": "sql_labels",
 						"type": "DatasetReference"
 					},
-					"name": "labelstosql"
+					"name": "labelstosql",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage",
+						"type": "LinkedServiceReference"
+					}
 				},
 				{
 					"dataset": {
 						"referenceName": "sql_location",
 						"type": "DatasetReference"
 					},
-					"name": "locationtosql"
+					"name": "locationtosql",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage",
+						"type": "LinkedServiceReference"
+					}
 				},
 				{
 					"dataset": {
 						"referenceName": "sql_songs",
 						"type": "DatasetReference"
 					},
-					"name": "songstosql"
+					"name": "songstosql",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage",
+						"type": "LinkedServiceReference"
+					}
 				},
 				{
 					"dataset": {
 						"referenceName": "sql_users",
 						"type": "DatasetReference"
 					},
-					"name": "userstosql"
+					"name": "userstosql",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage",
+						"type": "LinkedServiceReference"
+					}
 				},
 				{
 					"dataset": {
 						"referenceName": "sql_songplays",
 						"type": "DatasetReference"
 					},
-					"name": "songplaystosql"
+					"name": "songplaystosql",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [],
@@ -226,8 +254,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 4,",
-				"     errorHandlingOption: 'stopOnFirstError',",
-				"     outputAssertFailedRows: true,",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_fileSystem: 'musicstreaming',",
+				"     rejectedData_folderPath: 'errors',",
+				"     transactionCommit: 'batch',",
+				"     reportSuccessOnError: false,",
 				"     mapColumn(",
 				"          ArtistID,",
 				"          Name,",
@@ -252,7 +284,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 2,",
-				"     errorHandlingOption: 'stopOnFirstError',",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_fileSystem: 'musicstreaming',",
+				"     rejectedData_folderPath: 'errors',",
+				"     transactionCommit: 'batch',",
+				"     reportSuccessOnError: false,",
 				"     mapColumn(",
 				"          Name,",
 				"          DateCreated,",
@@ -274,7 +311,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 5,",
-				"     errorHandlingOption: 'stopOnFirstError',",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_fileSystem: 'musicstreaming',",
+				"     rejectedData_folderPath: 'errors',",
+				"     transactionCommit: 'batch',",
+				"     reportSuccessOnError: false,",
 				"     mapColumn(",
 				"          Name",
 				"     )) ~> genretosql",
@@ -295,7 +337,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 3,",
-				"     errorHandlingOption: 'stopOnFirstError',",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_fileSystem: 'musicstreaming',",
+				"     rejectedData_folderPath: 'errors',",
+				"     transactionCommit: 'batch',",
+				"     reportSuccessOnError: false,",
 				"     mapColumn(",
 				"          Name,",
 				"          LocationID",
@@ -317,7 +364,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 1,",
-				"     errorHandlingOption: 'stopOnFirstError',",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_fileSystem: 'musicstreaming',",
+				"     rejectedData_folderPath: 'errors',",
+				"     transactionCommit: 'batch',",
+				"     reportSuccessOnError: false,",
 				"     mapColumn(",
 				"          TimeZone,",
 				"          Country",
@@ -343,7 +395,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 6,",
-				"     errorHandlingOption: 'stopOnFirstError',",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_fileSystem: 'musicstreaming',",
+				"     rejectedData_folderPath: 'errors',",
+				"     transactionCommit: 'batch',",
+				"     reportSuccessOnError: false,",
 				"     mapColumn(",
 				"          ArtistID,",
 				"          AlbumID,",
@@ -375,7 +432,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 7,",
-				"     errorHandlingOption: 'stopOnFirstError',",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_fileSystem: 'musicstreaming',",
+				"     rejectedData_folderPath: 'errors',",
+				"     transactionCommit: 'batch',",
+				"     reportSuccessOnError: false,",
 				"     mapColumn(",
 				"          FirstName,",
 				"          LastName,",
@@ -408,7 +470,12 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     saveOrder: 8,",
-				"     errorHandlingOption: 'stopOnFirstError',",
+				"     errorHandlingOption: 'allErrors',",
+				"     outputRejectedData: true,",
+				"     rejectedData_fileSystem: 'musicstreaming',",
+				"     rejectedData_folderPath: 'errors',",
+				"     transactionCommit: 'single',",
+				"     reportSuccessOnError: false,",
 				"     mapColumn(",
 				"          SongID,",
 				"          UserID,",
