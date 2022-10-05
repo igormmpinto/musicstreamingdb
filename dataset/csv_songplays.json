@@ -13,7 +13,7 @@
 				"folderPath": "songplays",
 				"fileSystem": "musicstreaming"
 			},
-			"columnDelimiter": "|",
+			"columnDelimiter": ",",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
